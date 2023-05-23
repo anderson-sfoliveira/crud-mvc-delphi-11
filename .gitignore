@@ -1,0 +1,67 @@
+# Arquivos compilados e binários
+*.exe
+*.dll
+*.bpl
+*.dcp
+*.dproj.local
+*.dproj.*
+*.res
+*.map
+*.deployproj
+*.drc
+*.dcp
+*.dcu
+__history
+
+# Arquivos de configuração do Delphi
+*.identcache
+*.cfg
+*.dsk
+*.local
+
+# Arquivos de backup do Delphi
+*.~*
+
+# Arquivos de pacotes do Delphi
+*.bpl
+*.dcp
+
+# Arquivos de saída do Delphi
+*.dcu
+*.map
+*.identcache
+
+# Arquivos temporários do Delphi
+__history
+*.local
+*.tmp
+
+# Diretórios de saída
+__recovery
+
+# Diretórios de projetos do Delphi
+__history
+__recovery
+
+# Diretórios específicos do Delphi
+__history
+__recovery
+
+# Diretórios de logs
+*.log
+
+# Arquivos específicos do Delphi
+*.identcache
+
+# Arquivos específicos do Delphi 11
+*.ent
+
+# Diretórios específicos do Delphi 11
+__history
+__recovery
+
+# Arquivos específicos do Delphi MVC Framework
+/Controllers/__rescache
+/Views/__rescache
+/Models/__rescache
+/Routes/__rescache
