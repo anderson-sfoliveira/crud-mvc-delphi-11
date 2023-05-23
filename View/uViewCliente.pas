@@ -1,43 +1,46 @@
-unit uFrmClienteView;
+unit uViewCliente;
 
 interface
 
 uses
    Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-   System.Classes, Vcl.Graphics,
-   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, FireDAC.Stan.Intf,
-   FireDAC.Stan.Option, FireDAC.Stan.Param,
+   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+   Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, uControllerCliente, uEnumerador,
+   Vcl.Mask, Vcl.Menus, uControllerContato, uValidador, Data.DB,
+   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
    FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-   Data.DB, Vcl.Grids, Vcl.DBGrids,
-   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uControllerCliente, uEnumerador,
-   Vcl.Mask;
+   FireDAC.Comp.DataSet, FireDAC.Comp.Client;
 
 type
-   TfrmCadastroCliente = class(TForm)
+   TfViewCliente = class(TForm)
       edtCliente: TEdit;
-      Label2: TLabel;
       mmTableClientes: TFDMemTable;
       DBGrid1: TDBGrid;
       dsClientes: TDataSource;
       btnSalvar: TButton;
-      Label1: TLabel;
       edtId: TEdit;
       btnExcluir: TButton;
       btnNovo: TButton;
-      Label4: TLabel;
-      Label5: TLabel;
       edtCNPJ: TMaskEdit;
       edtCPF: TMaskEdit;
       edtNascimento: TMaskEdit;
       edtRazao: TEdit;
-      Label3: TLabel;
-      Label6: TLabel;
       mmTableClientesid_cliente: TIntegerField;
       mmTableClientesrazao_social: TStringField;
       mmTableClientescliente: TStringField;
       mmTableClientescnpj: TStringField;
       mmTableClientescpf: TStringField;
       mmTableClientesdt_nascimento: TDateField;
+    PopupMenu1: TPopupMenu;
+    optNovoContato: TMenuItem;
+    optExcluirContato: TMenuItem;
+    dsContatos: TDataSource;
+    mmTableContatos: TFDMemTable;
+    StringField1: TStringField;
+    DBGrid2: TDBGrid;
+    mmTableContatosid_contato: TIntegerField;
+    Label7: TLabel;
+    Label8: TLabel;
       procedure FormShow(Sender: TObject);
       procedure btnExcluirClick(Sender: TObject);
       procedure DBGrid1KeyUp(Sender: TObject; var Key: Word;
@@ -46,10 +49,17 @@ type
         Shift: TShiftState; X, Y: Integer);
       procedure btnNovoClick(Sender: TObject);
       procedure btnSalvarClick(Sender: TObject);
+    procedure optNovoContatoClick(Sender: TObject);
+    procedure PopupMenu1Popup(Sender: TObject);
+    procedure optExcluirContatoClick(Sender: TObject);
+    procedure edtCPFExit(Sender: TObject);
+    procedure edtCNPJExit(Sender: TObject);
+    procedure edtNascimentoExit(Sender: TObject);
    private
       procedure incluir;
       procedure alterar;
       procedure CarregarClientes;
+      procedure CarregarContatos;
       procedure CarregarEdits;
       procedure CarregarIdGerado;
 
@@ -58,22 +68,29 @@ type
    end;
 
 var
-   frmCadastroCliente: TfrmCadastroCliente;
+   fViewCliente: TfViewCliente;
 
 implementation
 
 {$R *.dfm}
-{ TfrmCadastroCliente }
 
-procedure TfrmCadastroCliente.btnSalvarClick(Sender: TObject);
+uses uViewContato;
+
+{ TfViewCliente }
+
+procedure TfViewCliente.btnSalvarClick(Sender: TObject);
 begin
+   edtCNPJExit(Self);
+   edtCNPJExit(Self);
+   edtNascimentoExit(Self);
+
    if edtId.Text = '' then
       incluir
    else
       alterar;
 end;
 
-procedure TfrmCadastroCliente.incluir;
+procedure TfViewCliente.incluir;
 var
    controllerCliente: TControllerCliente;
    CNPJ: string;
@@ -99,18 +116,30 @@ begin
       controllerCliente.ClienteModel.dtNascimento := edtNascimento.Text;
 
       if controllerCliente.persistir then
-         ShowMessage('Incluído com sucesso.')
+      begin
+         ShowMessage('Incluído com sucesso.');
+         Self.CarregarClientes();
+         Self.CarregarIdGerado;
+         Self.CarregarContatos;
+      end
       else
-         ShowMessage('Não foi possível realizar essa operação.');
+         begin
+            if controllerCliente.ClienteModel.widAlerta = '' then
+               ShowMessage('Não foi possível realizar essa operação.')
+            else
+               begin
+                  ShowMessage(controllerCliente.ClienteModel.widAlerta);
+               end;
+         end;
+
    finally
       FreeAndNil(controllerCliente);
    end;
 
-   Self.CarregarClientes();
-   CarregarIdGerado;
+
 end;
 
-procedure TfrmCadastroCliente.alterar;
+procedure TfViewCliente.alterar;
 var
    controllerCliente: TControllerCliente;
    CNPJ: string;
@@ -137,17 +166,77 @@ begin
       controllerCliente.ClienteModel.dtNascimento := edtNascimento.Text;
 
       if controllerCliente.persistir then
-         ShowMessage('Alterado com sucesso.')
+      begin
+         ShowMessage('Alterado com sucesso.');
+         Self.CarregarClientes();
+      end
       else
-         ShowMessage('Não foi possível realizar essa operação.');
+         begin
+            if controllerCliente.ClienteModel.widAlerta = '' then
+               ShowMessage('Não foi possível realizar essa operação.')
+            else
+               begin
+                  ShowMessage(controllerCliente.ClienteModel.widAlerta);
+               end;
+         end;
    finally
       FreeAndNil(controllerCliente);
    end;
 
-   Self.CarregarClientes();
+
 end;
 
-procedure TfrmCadastroCliente.btnExcluirClick(Sender: TObject);
+procedure TfViewCliente.optExcluirContatoClick(Sender: TObject);
+var
+   controllerContato: TControllerContato;
+begin
+   controllerContato := TControllerContato.Create;
+
+   try
+      if edtId.Text <> '' then
+      begin
+         if (Application.MessageBox(PChar('Deseja excluir o registro?'),
+           'Confirmação', MB_YESNO + MB_DEFBUTTON2 + MB_ICONQUESTION) = mrYes)
+         then
+         begin
+            controllerContato.ContatoModel.acao := uEnumerador.tipoExclusao;
+            controllerContato.ContatoModel.IdContato := mmTableContatos.Fields[0].AsInteger;
+
+            if controllerContato.persistir() then
+               ShowMessage('Excluído com sucesso.');
+
+            Self.CarregarContatos;
+         end;
+      end;
+   finally
+      FreeAndNil(controllerContato);
+   end;
+end;
+
+procedure TfViewCliente.optNovoContatoClick(Sender: TObject);
+begin
+  Application.CreateForm(TfViewContato, fViewContato);
+  try
+     fViewContato.IdCliente := strtoint(edtId.Text);
+
+    fViewContato.ShowModal;
+  finally
+    fViewContato.Release;
+  end;
+
+  Self.CarregarContatos;
+end;
+
+procedure TfViewCliente.PopupMenu1Popup(Sender: TObject);
+begin
+   optNovoContato.Enabled    := false;
+   optExcluirContato.Enabled := false;
+
+   if edtId.Text <> ''                then optNovoContato.Enabled    := true;
+   if mmTableContatos.RecordCount > 0 then optExcluirContato.Enabled := true;
+end;
+
+procedure TfViewCliente.btnExcluirClick(Sender: TObject);
 var
    controllerCliente: TControllerCliente;
 begin
@@ -175,7 +264,7 @@ begin
    end;
 end;
 
-procedure TfrmCadastroCliente.btnNovoClick(Sender: TObject);
+procedure TfViewCliente.btnNovoClick(Sender: TObject);
 begin
    edtId.Clear;
    edtCliente.Clear;
@@ -186,12 +275,12 @@ begin
    edtCliente.SetFocus();
 end;
 
-procedure TfrmCadastroCliente.CarregarClientes;
+procedure TfViewCliente.CarregarClientes;
 var
    controllerCliente: TControllerCliente;
    qCliente: TFDQuery;
 begin
-   qCliente := TFDQuery.Create(nil);
+   qCliente := TFDQuery.Create(fViewCliente);
    controllerCliente := TControllerCliente.Create;
 
    try
@@ -211,7 +300,33 @@ begin
    end;
 end;
 
-procedure TfrmCadastroCliente.CarregarEdits;
+procedure TfViewCliente.CarregarContatos;
+var
+   controllerContato: TControllerContato;
+   vQuery: TFDQuery;
+begin
+   vQuery := TFDQuery.Create(fViewCliente);
+   controllerContato := TControllerContato.Create;
+
+   try
+      controllerContato.ContatoModel.idCliente := StrToInt(edtId.Text);
+      vQuery := controllerContato.selecionar;
+
+      try
+         vQuery.FetchAll;
+         mmTableContatos.Close;
+         mmTableContatos.Data := vQuery.Data;
+      finally
+         vQuery.Close;
+         FreeAndNil(vQuery);
+      end;
+
+   finally
+      FreeAndNil(controllerContato);
+   end;
+end;
+
+procedure TfViewCliente.CarregarEdits;
 begin
    edtId.Text := mmTableClientes.Fields[0].AsString;
    edtCliente.Text := mmTableClientes.Fields[1].AsString;
@@ -221,43 +336,82 @@ begin
    edtNascimento.Text := DateToStr(mmTableClientes.Fields[5].AsDateTime);
 end;
 
-function TfrmCadastroCliente.FormatarCNPJ(const CNPJ: string): string;
+function TfViewCliente.FormatarCNPJ(const CNPJ: string): string;
 begin
    Result := Copy(CNPJ, 1, 2) + '.' + Copy(CNPJ, 3, 3) + '.' + Copy(CNPJ, 6, 3)
      + '/' + Copy(CNPJ, 9, 4) + '-' + Copy(CNPJ, 13, 2);
 end;
 
-function TfrmCadastroCliente.FormatarCPF(const CPF: string): string;
+function TfViewCliente.FormatarCPF(const CPF: string): string;
 begin
    Result := Copy(CPF, 1, 3) + '.' + Copy(CPF, 4, 3) + '.' + Copy(CPF, 7, 3) +
      '-' + Copy(CPF, 10, 2);
 end;
 
-procedure TfrmCadastroCliente.CarregarIdGerado;
+procedure TfViewCliente.CarregarIdGerado;
 begin
    mmTableClientes.Last;
    edtId.Text := mmTableClientes.Fields[0].AsString;
 end;
 
-procedure TfrmCadastroCliente.DBGrid1KeyUp(Sender: TObject; var Key: Word;
+procedure TfViewCliente.DBGrid1KeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
    Self.CarregarEdits();
+   Self.CarregarContatos;
 end;
 
-procedure TfrmCadastroCliente.DBGrid1MouseUp(Sender: TObject;
+procedure TfViewCliente.DBGrid1MouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
    Self.CarregarEdits();
+   Self.CarregarContatos;
 end;
 
-procedure TfrmCadastroCliente.FormShow(Sender: TObject);
+procedure TfViewCliente.edtCNPJExit(Sender: TObject);
+begin
+   if (edtCNPJ.Text <> '  .   .   /    -  ') then
+   begin
+     if not TValidador.ValidarCNPJ(edtCNPJ.Text) then
+     begin
+       ShowMessage('CNPJ inválido');
+       abort;
+     end;
+   end;
+end;
+
+procedure TfViewCliente.edtCPFExit(Sender: TObject);
+begin
+   if (edtCPF.Text <> '   .   .   -  ') then
+   begin
+     if not TValidador.ValidarCPF(edtCPF.Text) then
+     begin
+       ShowMessage('CPF inválido');
+       abort;
+     end;
+   end;
+end;
+
+procedure TfViewCliente.edtNascimentoExit(Sender: TObject);
+begin
+   if (edtNascimento.Text <> '  /  /    ') then
+   begin
+     if not TValidador.ValidarData(edtNascimento.Text) then
+     begin
+       ShowMessage('Data inválida');
+       abort;
+     end;
+   end;
+end;
+
+procedure TfViewCliente.FormShow(Sender: TObject);
 begin
    Self.CarregarClientes();
 
    if mmTableClientes.RecordCount > 0 then
    begin
       Self.CarregarEdits();
+      Self.CarregarContatos;
    end;
 end;
 

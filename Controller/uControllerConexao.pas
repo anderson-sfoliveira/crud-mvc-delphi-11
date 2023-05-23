@@ -2,21 +2,18 @@ unit uControllerConexao;
 
 interface
 
-uses SysUtils, uDAOConexao, uModelEmpresa;
+uses SysUtils, uDAOConexao;
 
 Type
    TControllerConexao = class
    private
       FConexao: TDAOConexao;
-      FModelEmpresa: TModelEmpresa;
 
       constructor Create;
       destructor Destroy; Override;
    public
       property daoConexao: TDAOConexao read FConexao write FConexao;
-      property ModelEmpresa: TModelEmpresa read FModelEmpresa write FModelEmpresa;
 
-      procedure CarregarEmpresa(ACodigoEmpresa: Integer);
       class function getInstance: TControllerConexao;
    end;
 
@@ -25,12 +22,7 @@ implementation
 var
    instanciaBD: TControllerConexao;
 
-   { TControllerConexao }
-
-procedure TControllerConexao.CarregarEmpresa(ACodigoEmpresa: Integer);
-begin
-   ModelEmpresa.Carregar(ACodigoEmpresa);
-end;
+{ TControllerConexao }
 
 constructor TControllerConexao.Create;
 begin

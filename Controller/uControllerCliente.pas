@@ -3,7 +3,7 @@ unit uControllerCliente;
 interface
 
 uses
-   uModelCliente, System.SysUtils, FireDAC.Comp.Client, uDAOCliente, uEnumerador;
+   uModelCliente, System.SysUtils, FireDAC.Comp.Client, uDAOCliente;
 
 type
    TControllerCliente = class
@@ -16,8 +16,8 @@ type
       constructor Create;
       destructor Destroy; override;
 
-      function persistir: Boolean;
-      function selecionar: TFDQuery;
+      function Persistir: Boolean;
+      function Selecionar: TFDQuery;
    end;
 
 implementation
@@ -32,18 +32,17 @@ end;
 destructor TControllerCliente.Destroy;
 begin
    FreeAndNil(FClienteModel);
-
    inherited;
 end;
 
-function TControllerCliente.persistir: Boolean;
+function TControllerCliente.Persistir: Boolean;
 begin
-   Result := FClienteModel.persistir;
+   Result := FClienteModel.Persistir;
 end;
 
-function TControllerCliente.selecionar: TFDQuery;
+function TControllerCliente.Selecionar: TFDQuery;
 begin
-   Result := FClienteModel.selecionar;
+   Result := FClienteModel.Selecionar;
 end;
 
 end.

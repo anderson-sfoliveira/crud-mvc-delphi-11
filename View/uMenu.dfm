@@ -1,39 +1,24 @@
-object frmPrincipal: TfrmPrincipal
+object fMenu: TfMenu
   Left = 0
   Top = 0
-  Caption = 'Projeto MVC com conceitos de OOP.'
-  ClientHeight = 377
-  ClientWidth = 694
+  Caption = 'Embalsoft'
+  ClientHeight = 600
+  ClientWidth = 800
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
   Font.Style = []
-  WindowState = wsMaximized
-  OnCreate = FormCreate
-  OnDestroy = FormDestroy
-  TextHeight = 13
-  object StatusBar1: TStatusBar
-    Left = 0
-    Top = 358
-    Width = 694
-    Height = 19
-    Panels = <
-      item
-        Width = 70
-      end
-      item
-        Width = 50
-      end>
-  end
+  Position = poScreenCenter
+  TextHeight = 15
   object ActionMainMenuBar1: TActionMainMenuBar
     Left = 0
     Top = 0
-    Width = 694
+    Width = 800
     Height = 25
     UseSystemFont = False
-    ActionManager = ActionManager1
+    ActionManager = ActionManager2
     Caption = 'ActionMainMenuBar1'
     Color = clMenuBar
     ColorMap.DisabledFontColor = 7171437
@@ -46,8 +31,10 @@ object frmPrincipal: TfrmPrincipal
     Font.Name = 'Segoe UI'
     Font.Style = []
     Spacing = 0
+    ExplicitLeft = -66
+    ExplicitWidth = 694
   end
-  object ActionManager1: TActionManager
+  object ActionManager2: TActionManager
     ActionBars = <
       item
         Items = <
@@ -60,7 +47,7 @@ object frmPrincipal: TfrmPrincipal
           end>
         ActionBar = ActionMainMenuBar1
       end>
-    Left = 608
+    Left = 472
     Top = 104
     StyleName = 'Platform Default'
     object Action1: TAction

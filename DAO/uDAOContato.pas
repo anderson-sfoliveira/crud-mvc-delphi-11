@@ -3,81 +3,61 @@ unit uDAOContato;
 interface
 
 uses
-  FireDAC.Comp.Client, uDAOConexao, uModelContato, System.SysUtils, uEnumerador;
+   FireDAC.Comp.Client, uDAOConexao, uModelContato, System.SysUtils;
 
 type
-  TDAOContato = class
-  public
-    function Incluir(modelContato: TModelContato): Boolean;
-    function Alterar(modelContato: TModelContato): Boolean;
-    function Excluir(modelContato: TModelContato): Boolean;
-    function Selecionar: TFDQuery;
-  end;
+   TDAOContato = class
+      public
+         function Incluir(modelContato: TModelContato): Boolean;
+         function Excluir(modelContato: TModelContato): Boolean;
+         function Selecionar(modelContato: TModelContato): TFDQuery;
+      end;
 
 implementation
 
-uses
-  uControllerConexao;
+{ TDAOContato }
+
+uses uControllerConexao;
 
 function TDAOContato.Incluir(modelContato: TModelContato): Boolean;
 var
-  VQry: TFDQuery;
+   vQuery: TFDQuery;
 begin
-  VQry := TControllerConexao.GetInstance().DAOConexao.CriarQuery();
-  try
-    VQry.ExecSQL(
-      'INSERT INTO TbContatos (id_cliente, nome) ' +
-      'VALUES (:id_cliente, :nome)',
-      [modelContato.IdCliente, modelContato.Nome]
-    );
+   vQuery := TControllerConexao.GetInstance().daoConexao.CriarQuery();
+   try
+      vQuery.ExecSQL('INSERT INTO TbContatos (id_cliente, nome) ' +
+        'VALUES (:id_cliente, :nome)', [modelContato.IdCliente,
+        modelContato.Nome]);
 
-    Result := True;
-  finally
-    FreeAndNil(VQry);
-  end;
-end;
-
-function TDAOContato.Alterar(modelContato: TModelContato): Boolean;
-var
-  VQry: TFDQuery;
-begin
-  VQry := TControllerConexao.GetInstance().DAOConexao.CriarQuery();
-  try
-    VQry.ExecSQL(
-      'UPDATE TbContatos SET id_cliente = :id_cliente, nome = :nome ' +
-      'WHERE id_contato = :id_contato',
-      [modelContato.IdCliente, modelContato.Nome, modelContato.IdContato]
-    );
-
-    Result := True;
-  finally
-    FreeAndNil(VQry);
-  end;
+      Result := True;
+   finally
+      FreeAndNil(vQuery);
+   end;
 end;
 
 function TDAOContato.Excluir(modelContato: TModelContato): Boolean;
 var
-  VQry: TFDQuery;
+   vQuery: TFDQuery;
 begin
-  VQry := TControllerConexao.GetInstance().DAOConexao.CriarQuery();
-  try
-    VQry.ExecSQL('DELETE FROM TbContatos WHERE id_contato = :id_contato',
-      [modelContato.IdContato]);
+   vQuery := TControllerConexao.GetInstance().daoConexao.CriarQuery();
+   try
+      vQuery.ExecSQL('DELETE FROM TbContatos WHERE id_contato = :id_contato',
+        [modelContato.IdContato]);
 
-    Result := True;
-  finally
-    FreeAndNil(VQry);
-  end;
+      Result := True;
+   finally
+      FreeAndNil(vQuery);
+   end;
 end;
 
-function TDAOContato.Selecionar: TFDQuery;
+function TDAOContato.Selecionar(modelContato: TModelContato): TFDQuery;
 var
-  VQry: TFDQuery;
+   vQuery: TFDQuery;
 begin
-  VQry := TControllerConexao.GetInstance().DAOConexao.CriarQuery();
-  VQry.Open('SELECT id_contato, id_cliente, nome FROM TbContatos');
-  Result := VQry;
+   vQuery := TControllerConexao.GetInstance().daoConexao.CriarQuery();
+   vQuery.Open('SELECT id_contato, id_cliente, nome FROM TbContatos WHERE id_cliente = :id_cliente',
+        [modelContato.IdCliente]);
+   Result := vQuery;
 end;
 
 end.
-

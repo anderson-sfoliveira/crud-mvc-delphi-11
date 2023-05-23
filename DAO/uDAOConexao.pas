@@ -38,16 +38,11 @@ begin
    FConexao := TFDConnection.Create(nil);
    FConexao.DriverName := 'SQLite';
    FConexao.Params.Add('Database=D:\Anderson Oliveira\Documents\workspace - embalsoft\db\BDCANDITADO.db');
-   // Configurar outros parâmetros opcionais, se necessário
    FConexao.Params.Add('OpenMode=OpenOrCreate');
    FConexao.Params.Add('LockingMode=Normal');
    FConexao.Params.Add('Synchronous=Full');
    FConexao.Params.Add('JournalMode=Auto');
    FConexao.LoginPrompt := false;
-
-
-//SQLiteDriverLink.Free;
-//DriverLink.Free;
 end;
 
 function TDAOConexao.criarQuery: TFDQuery;

@@ -104,7 +104,7 @@
             <Form>Form1</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Controller\uControllerConexão.pas"/>
+        <DCCReference Include="Controller\uControllerConexao.pas"/>
         <DCCReference Include="DAO\uDAOConexao.pas"/>
         <DCCReference Include="Model\uModelCliente.pas"/>
         <DCCReference Include="Model\uModelEmpresa.pas"/>
@@ -120,6 +120,14 @@
             <Form>frmPrincipal</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Model\uModelContato.pas"/>
+        <DCCReference Include="DAO\uDAOContato.pas"/>
+        <DCCReference Include="Controller\uControllerContato.pas"/>
+        <DCCReference Include="View\uFrmContatos.pas">
+            <Form>frmContatos</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="ClassFunctions\uValidador.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

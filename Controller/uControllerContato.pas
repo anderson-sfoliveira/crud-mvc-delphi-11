@@ -11,8 +11,7 @@ type
       FContatoModel: TModelContato;
 
    public
-      property ContatoModel: TModelContato read FContatoModel
-        write FContatoModel;
+      property ContatoModel: TModelContato read FContatoModel write FContatoModel;
 
       constructor Create;
       destructor Destroy; override;
