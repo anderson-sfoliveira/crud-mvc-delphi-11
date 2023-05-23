@@ -100,34 +100,29 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="View\Unit1.pas">
-            <Form>Form1</Form>
+        <DCCReference Include="View\uMenu.pas">
+            <Form>fMenu</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Controller\uControllerConexao.pas"/>
         <DCCReference Include="DAO\uDAOConexao.pas"/>
         <DCCReference Include="Model\uModelCliente.pas"/>
-        <DCCReference Include="Model\uModelEmpresa.pas"/>
         <DCCReference Include="Model\uEnumerador.pas"/>
         <DCCReference Include="DAO\uDAOCliente.pas"/>
-        <DCCReference Include="DAO\uEmpresaDao.pas"/>
         <DCCReference Include="Controller\uControllerCliente.pas"/>
-        <DCCReference Include="View\uFrmClienteView.pas">
-            <Form>frmCadastroCliente</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="View\uFrmPrincipalView.pas">
-            <Form>frmPrincipal</Form>
+        <DCCReference Include="View\uViewCliente.pas">
+            <Form>fViewCliente</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Model\uModelContato.pas"/>
         <DCCReference Include="DAO\uDAOContato.pas"/>
         <DCCReference Include="Controller\uControllerContato.pas"/>
-        <DCCReference Include="View\uFrmContatos.pas">
-            <Form>frmContatos</Form>
+        <DCCReference Include="View\uViewContato.pas">
+            <Form>fViewContato</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="ClassFunctions\uValidador.pas"/>
+        <DCCReference Include="ClassFunctions\uValidadorClasses.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

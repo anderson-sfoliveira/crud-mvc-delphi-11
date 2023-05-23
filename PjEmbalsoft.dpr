@@ -2,28 +2,26 @@ program PjEmbalsoft;
 
 uses
   Vcl.Forms,
-  Unit1 in 'View\Unit1.pas' {Form1},
+  uMenu in 'View\uMenu.pas' {fMenu},
   uControllerConexao in 'Controller\uControllerConexao.pas',
   uDAOConexao in 'DAO\uDAOConexao.pas',
   uModelCliente in 'Model\uModelCliente.pas',
-  uModelEmpresa in 'Model\uModelEmpresa.pas',
   uEnumerador in 'Model\uEnumerador.pas',
   uDAOCliente in 'DAO\uDAOCliente.pas',
-  uEmpresaDao in 'DAO\uEmpresaDao.pas',
   uControllerCliente in 'Controller\uControllerCliente.pas',
-  uFrmClienteView in 'View\uFrmClienteView.pas' {frmCadastroCliente},
-  uFrmPrincipalView in 'View\uFrmPrincipalView.pas' {frmPrincipal},
+  uViewCliente in 'View\uViewCliente.pas' {fViewCliente},
   uModelContato in 'Model\uModelContato.pas',
   uDAOContato in 'DAO\uDAOContato.pas',
   uControllerContato in 'Controller\uControllerContato.pas',
-  uFrmContatos in 'View\uFrmContatos.pas' {frmContatos},
-  uValidador in 'ClassFunctions\uValidador.pas';
+  uViewContato in 'View\uViewContato.pas' {fViewContato},
+  uValidador in 'ClassFunctions\uValidador.pas',
+  uValidadorClasses in 'ClassFunctions\uValidadorClasses.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TfMenu, fMenu);
   Application.Run;
 end.
